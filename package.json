@@ -1,0 +1,18 @@
+{
+  "name": "balonu_api",
+  "version": "1.0.0",
+  "description": "An API Rest for the project Balonu",
+  "main": "database.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mysql2": "^3.6.3",
+    "nodemon": "^3.0.1"
+  }
+}
