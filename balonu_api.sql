@@ -16,79 +16,79 @@ CREATE TABLE utilisateur(
 );
 
 CREATE TABLE montgolfiere(
-   Id_montgolfiere INT,
+   id_montgolfiere INT AUTO_INCREMENT,
    nombre_place INT,
    libelle_montgolfiere VARCHAR(200),
    photo VARCHAR(200),
-   Id_utilisateur INT,
-   PRIMARY KEY(Id_montgolfiere),
-   FOREIGN KEY(Id_utilisateur) REFERENCES utilisateur(Id_utilisateur)
+   id_utilisateur INT,
+   PRIMARY KEY(id_montgolfiere),
+   FOREIGN KEY(id_utilisateur) REFERENCES utilisateur(id_utilisateur)
 );
 
 CREATE TABLE emplacement(
-   Id_emplacement INT,
+   id_emplacement INT AUTO_INCREMENT,
    libelle_emplacement VARCHAR(200),
-   PRIMARY KEY(Id_emplacement)
+   PRIMARY KEY(id_emplacement)
 );
 
 CREATE TABLE stand(
-   Id_stand INT,
+   id_stand INT AUTO_INCREMENT,
    libelle_stand VARCHAR(200),
-   Id_emplacement INT,
-   Id_utilisateur INT,
+   id_emplacement INT,
+   id_utilisateur INT,
    PRIMARY KEY(Id_stand),
-   UNIQUE(Id_emplacement),
-   FOREIGN KEY(Id_emplacement) REFERENCES emplacement(Id_emplacement),
-   FOREIGN KEY(Id_utilisateur) REFERENCES utilisateur(Id_utilisateur)
+   UNIQUE(id_emplacement),
+   FOREIGN KEY(id_emplacement) REFERENCES emplacement(id_emplacement),
+   FOREIGN KEY(id_utilisateur) REFERENCES utilisateur(id_utilisateur)
 );
 
 CREATE TABLE produit(
-   Id_produit INT,
+   id_produit INT AUTO_INCREMENT,
    libelle_produit VARCHAR(200),
    stock INT,
-   PRIMARY KEY(Id_produit)
+   PRIMARY KEY(id_produit)
 );
 
 CREATE TABLE couleur(
-   Id_couleur INT,
+   id_couleur INT AUTO_INCREMENT,
    libelle_couleur VARCHAR(50),
-   PRIMARY KEY(Id_couleur)
+   PRIMARY KEY(id_couleur)
 );
 
 CREATE TABLE horaire_vol(
-   Id_horaire_vol INT,
+   id_horaire_vol INT AUTO_INCREMENT,
    date_vol DATE,
    horaire_vol TIME,
-   PRIMARY KEY(Id_horaire_vol)
+   PRIMARY KEY(id_horaire_vol)
 );
 
 CREATE TABLE vend(
-   Id_stand INT,
-   Id_produit INT,
+   id_stand INT,
+   id_produit INT,
    prix_produit DECIMAL(15,2),
-   PRIMARY KEY(Id_stand, Id_produit),
-   FOREIGN KEY(Id_stand) REFERENCES stand(Id_stand),
-   FOREIGN KEY(Id_produit) REFERENCES produit(Id_produit)
+   PRIMARY KEY(id_stand, id_produit),
+   FOREIGN KEY(id_stand) REFERENCES stand(id_stand),
+   FOREIGN KEY(id_produit) REFERENCES produit(id_produit)
 );
 
 CREATE TABLE est(
-   Id_montgolfiere INT,
-   Id_couleur INT,
-   PRIMARY KEY(Id_montgolfiere, Id_couleur),
-   FOREIGN KEY(Id_montgolfiere) REFERENCES montgolfiere(Id_montgolfiere),
-   FOREIGN KEY(Id_couleur) REFERENCES couleur(Id_couleur)
+   id_montgolfiere INT,
+   id_couleur INT,
+   PRIMARY KEY(id_montgolfiere, id_couleur),
+   FOREIGN KEY(id_montgolfiere) REFERENCES montgolfiere(id_montgolfiere),
+   FOREIGN KEY(id_couleur) REFERENCES couleur(id_couleur)
 );
 
 CREATE TABLE vol(
-   Id_utilisateur INT,
-   Id_montgolfiere INT,
-   Id_horaire_vol INT,
+   id_utilisateur INT,
+   id_montgolfiere INT,
+   id_horaire_vol INT,
    prix_vol DECIMAL(15,2),
    libelle_vol VARCHAR(200),
-   PRIMARY KEY(Id_utilisateur, Id_montgolfiere, Id_horaire_vol),
-   FOREIGN KEY(Id_utilisateur) REFERENCES utilisateur(Id_utilisateur),
-   FOREIGN KEY(Id_montgolfiere) REFERENCES montgolfiere(Id_montgolfiere),
-   FOREIGN KEY(Id_horaire_vol) REFERENCES horaire_vol(Id_horaire_vol)
+   PRIMARY KEY(id_utilisateur, id_montgolfiere, id_horaire_vol),
+   FOREIGN KEY(id_utilisateur) REFERENCES utilisateur(id_utilisateur),
+   FOREIGN KEY(id_montgolfiere) REFERENCES montgolfiere(id_montgolfiere),
+   FOREIGN KEY(id_horaire_vol) REFERENCES horaire_vol(id_horaire_vol)
 );
 
 -- Insérer des données dans la table "utilisateur"

@@ -1,11 +1,4 @@
-const mysql = require('mysql2');
-
-const pool = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: ''
-}).promise()
+const pool = require('../../config/db');
 
 function getUtilisateurs() {
     return pool.query("SELECT * FROM utilisateur").then(([rows]) => rows);
@@ -20,8 +13,19 @@ function createUtilisateur(login_utilisateur, mot_de_passe_utilisateur, nom_util
         .then(([result]) => getUtilisateur(result.insertId));
 }
 
+function deleteUtilisateur(id_utilisateur) {
+    return pool.query("DELETE FROM utilisateur WHERE id_utilisateur = ?", [id_utilisateur]);
+}
+
+function updateUtilisateur(id_utilisateur, login_utilisateur, mot_de_passe_utilisateur, nom_utilisateur, prenom_utilisateur, mail_utilisateur, adresse_utilisateur, telephone_utilisateur, est_admin, est_montgolfier, est_prestataire){
+    return pool.query("UPDATE utilisateur SET login_utilisateur = ?, mot_de_passe_utilisateur = ?, nom_utilisateur = ?, prenom_utilisateur = ?, mail_utilisateur = ?, adresse_utilisateur = ?, telephone_utilisateur = ?, est_admin = ?, est_montgolfier = ?, est_prestataire = ? WHERE id_utilisateur = ?", [login_utilisateur, mot_de_passe_utilisateur, nom_utilisateur, prenom_utilisateur, mail_utilisateur, adresse_utilisateur, telephone_utilisateur, est_admin, est_montgolfier, est_prestataire, id_utilisateur])
+        .then(([result]) => getUtilisateur(id));
+}
+
 module.exports = {
     getUtilisateurs,
     getUtilisateur,
     createUtilisateur,
+    deleteUtilisateur,
+    updateUtilisateur
 };

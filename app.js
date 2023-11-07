@@ -1,5 +1,5 @@
 const express = require('express');
-const {getUtilisateurs, getUtilisateur, createUtilisateur} = require('./database')
+const {getUtilisateurs, getUtilisateur, createUtilisateur, deleteUtilisateur, updateUtilisateur} = require('./services/utilisateurs/utilisateurService')
 
 const app = express()
 
@@ -20,6 +20,21 @@ app.post('/utilisateurs', async function (req, res){
     const {login_utilisateur, mot_de_passe_utilisateur, nom_utilisateur, prenom_utilisateur, mail_utilisateur, adresse_utilisateur, telephone_utilisateur, est_admin, est_montgolfier, est_prestataire} = req.body
     const utilisateur = await createUtilisateur(login_utilisateur, mot_de_passe_utilisateur, nom_utilisateur, prenom_utilisateur, mail_utilisateur, adresse_utilisateur, telephone_utilisateur, est_admin, est_montgolfier, est_prestataire);
     res.status(201).send(utilisateur);
+})
+
+// Route pour supprimer un utilisateur
+app.delete('/utilisateurs/:id', async function (req,res){
+    const id = req.params.id;
+    await deleteUtilisateur(id);
+    res.status(204); // Renvoie un statut 204 (No Content) pour indiquer que la suprression s'est bien passée
+})
+
+// Route pour mettre à jour un utilisateur par rapport à son ID
+app.put('/utilisateurs/:id', async (req, res) => {
+    const id = req.params.id;
+    const utilisateurData = req.body;
+    const utilisateur = await updateUtilisateur(id, utilisateurData);
+    res.send(utilisateur);
 })
 
 
