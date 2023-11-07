@@ -23,6 +23,7 @@ app.post('/utilisateurs', async function (req, res){
 })
 
 // Route pour supprimer un utilisateur
+// A compléter quand on aura les montgolfières de faites pour montrer la liste que l'on a besoin de supprimer avant de supprimer l'user
 app.delete('/utilisateurs/:id', async function (req,res){
     const id = req.params.id;
     await deleteUtilisateur(id);
@@ -32,8 +33,8 @@ app.delete('/utilisateurs/:id', async function (req,res){
 // Route pour mettre à jour un utilisateur par rapport à son ID
 app.put('/utilisateurs/:id', async (req, res) => {
     const id = req.params.id;
-    const utilisateurData = req.body;
-    const utilisateur = await updateUtilisateur(id, utilisateurData);
+    const { login_utilisateur, mot_de_passe_utilisateur, nom_utilisateur, prenom_utilisateur, mail_utilisateur, adresse_utilisateur, telephone_utilisateur, est_admin, est_montgolfier, est_prestataire } = req.body;
+    const utilisateur = await updateUtilisateur(id, login_utilisateur, mot_de_passe_utilisateur, nom_utilisateur, prenom_utilisateur, mail_utilisateur, adresse_utilisateur, telephone_utilisateur, est_admin, est_montgolfier, est_prestataire);
     res.send(utilisateur);
 })
 

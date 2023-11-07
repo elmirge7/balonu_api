@@ -19,7 +19,7 @@ function deleteUtilisateur(id_utilisateur) {
 
 function updateUtilisateur(id_utilisateur, login_utilisateur, mot_de_passe_utilisateur, nom_utilisateur, prenom_utilisateur, mail_utilisateur, adresse_utilisateur, telephone_utilisateur, est_admin, est_montgolfier, est_prestataire){
     return pool.query("UPDATE utilisateur SET login_utilisateur = ?, mot_de_passe_utilisateur = ?, nom_utilisateur = ?, prenom_utilisateur = ?, mail_utilisateur = ?, adresse_utilisateur = ?, telephone_utilisateur = ?, est_admin = ?, est_montgolfier = ?, est_prestataire = ? WHERE id_utilisateur = ?", [login_utilisateur, mot_de_passe_utilisateur, nom_utilisateur, prenom_utilisateur, mail_utilisateur, adresse_utilisateur, telephone_utilisateur, est_admin, est_montgolfier, est_prestataire, id_utilisateur])
-        .then(([result]) => getUtilisateur(id));
+        .then(([result]) => getUtilisateur(id_utilisateur));
 }
 
 module.exports = {
