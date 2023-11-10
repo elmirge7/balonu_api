@@ -21,6 +21,11 @@ function deleteMontgolfiere(id_montgolfiere) {
     return pool.query("DELETE FROM montgolfiere WHERE id_montgolfiere = ?", [id_montgolfiere]);
 }
 
+// supprimer toutes les montgoflieres d'un utilisateur
+function deleteMontgolfieresByIdUtilisateur(id_utilisateur) {
+    return pool.query("DELETE FROM montgolfiere WHERE id_utilisateur = ?", [id_utilisateur]);
+}
+
 // Mettre à jour une montgolfière
 function updateMontgolfiere(nombre_place, libelle_montgolfiere, photo, id_utilisateur){
     return pool.query("UPDATE montgolfiere SET nombre_place = ?, libelle_montgolfiere = ?, photo = ?, id_utilisateur = ?", [nombre_place, libelle_montgolfiere, photo, id_utilisateur])
@@ -28,8 +33,8 @@ function updateMontgolfiere(nombre_place, libelle_montgolfiere, photo, id_utilis
 }
 
 // Récupérer les montgolfieres d'un utilisateur
-function getMontgolfiereByIdUtilisateur(id_utilisateur){
-    return pool.query("SELECT * FROM montgolfiere WHERE id_utilisateur = ?", [id_utilisateur])
+function getMontgolfieresByIdUtilisateur(id_utilisateur){
+    return pool.query("SELECT * FROM montgolfiere WHERE id_utilisateur = ?", [id_utilisateur]).then(([rows]) => rows);
 }
 
 module.exports = {
@@ -38,5 +43,6 @@ module.exports = {
     createMontgolfiere,
     deleteMontgolfiere,
     updateMontgolfiere,
-    getMontgolfiereByIdUtilisateur
+    getMontgolfieresByIdUtilisateur,
+    deleteMontgolfieresByIdUtilisateur
 };
