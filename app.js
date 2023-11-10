@@ -1,5 +1,6 @@
 const express = require('express');
 const {getUtilisateurs, getUtilisateur, createUtilisateur, deleteUtilisateur, updateUtilisateur} = require('./services/utilisateurs/utilisateurService')
+const {getMontgolfieres, getMontgolfiere, createMontgolfiere, deleteMontgolfiere, updateMontgolfiere, getMontgolfiereByIdUtilisateur} = require('./services/montgolfieres/montgolfiereService')
 
 const app = express()
 
@@ -37,6 +38,23 @@ app.put('/utilisateurs/:id', async (req, res) => {
     const utilisateur = await updateUtilisateur(id, login_utilisateur, mot_de_passe_utilisateur, nom_utilisateur, prenom_utilisateur, mail_utilisateur, adresse_utilisateur, telephone_utilisateur, est_admin, est_montgolfier, est_prestataire);
     res.send(utilisateur);
 })
+
+// Routes qui concernent les montgolfières
+
+// Accès à toutes les montgolfières
+app.get('/montgolfieres', async function (req, res) {
+    const montgolfieres = await getMontgolfieres();
+    res.send(montgolfieres);
+})
+
+// Accès à une montgolfière en fonction de son ID
+
+app.get('/montgolfieres/:id', async function (req, res){
+    const id = req.params.id;
+    const montgolfiere = await getMontgolfiere(id);
+    res.send(montgolfiere);
+})
+
 
 
 app.listen(3000,() => {
