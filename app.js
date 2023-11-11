@@ -1,6 +1,8 @@
 const express = require('express');
 const {getUtilisateurs, getUtilisateur, createUtilisateur, deleteUtilisateur, updateUtilisateur} = require('./services/utilisateurs/utilisateurService')
 const {getMontgolfieres, getMontgolfiere, createMontgolfiere, deleteMontgolfiere, updateMontgolfiere, getMontgolfieresByIdUtilisateur, deleteMontgolfieresByIdUtilisateur} = require('./services/montgolfieres/montgolfiereService')
+const {getStands, getStand, createStand, deleteStand, updateStand, getStandsByIdUtilisateur,getStandsByIdEmplacement} = require("./services/stands/standService");
+
 
 const app = express()
 
@@ -99,6 +101,69 @@ app.put('/montgolfieres/:id', async function (req, res){
     const montgolfiere = await updateMontgolfiere(nombre_place, libelle_montgolfiere, photo, id_utilisateur);
     res.send(montgolfiere);
 })
+
+
+
+
+
+
+
+
+// Routes concernant les stands
+// Accès à tous les stands
+app.get('/stands', async function (req, res) {
+    const stands = await getStands();
+    res.send(stands);
+});
+
+// Accès à un stand en fonction de son ID
+app.get('/stands/:id', async function (req, res) {
+    const id = req.params.id;
+    const stand = await getStand(id);
+    res.send(stand);
+});
+
+// Création d'un nouveau stand
+app.post('/stands', async function (req, res) {
+    const { libelle_stand, id_emplacement, id_utilisateur } = req.body;
+    const stand = await createStand(libelle_stand, id_emplacement, id_utilisateur);
+    res.status(201).send(stand);
+});
+
+// Suppression d'un stand par son ID
+app.delete('/stands/:id', async function (req, res) {
+    const id = req.params.id;
+    await deleteStand(id);
+    res.status(204).send(); // Renvoie un statut 204 (No Content) pour indiquer que la suppression s'est bien passée
+});
+
+// Mise à jour d'un stand par son ID
+app.put('/stands/:id', async function (req, res) {
+    const id = req.params.id;
+    const { libelle_stand, id_emplacement, id_utilisateur } = req.body;
+    const stand = await updateStand(id, libelle_stand, id_emplacement, id_utilisateur);
+    res.send(stand);
+});
+
+// Accès aux stands en fonction de l'id d'un utilisateur
+app.get('/utilisateurs/:id/stands', async function (req, res){
+    const id_utilisateur = req.params.id;
+    const stands = await getStandsByIdUtilisateur(id_utilisateur);
+    res.send(stands);
+});
+
+// Accès aux stands en fonction de l'id d'un emplacement
+app.get('/emplacements/:id/stands', async function (req, res) {
+    const id_emplacement = req.params.id;
+    const stands = await getStandsByIdEmplacement(id_emplacement);
+    res.send(stands);
+});
+
+
+
+
+
+
 
 
 
