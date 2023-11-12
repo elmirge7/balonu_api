@@ -6,7 +6,7 @@ const {getProduits, getProduit, createProduit, deleteProduit, updateProduit} = r
 const {getCouleurs, getCouleur, createCouleur, deleteCouleur, updateCouleur} = require('./services/couleurs/couleurService');
 const {getEmplacements,getEmplacement, createEmplacement, deleteEmplacement, updateEmplacement} = require('./services/emplacements/emplacementService');
 const {getHorairesVol, getHoraireVol, createHoraireVol, deleteHoraireVol, updateHoraireVol} = require('./services/horairesVol/horaireVolService');
-
+const {getAssociation, createAssociation, deleteAssociation, getAllAssociationsForMontgolfiere, getAllAssociationsForCouleur} = require('./services/est/estService');
 
 const app = express()
 
@@ -355,6 +355,45 @@ app.put('/horairesVol/:id', async function (req, res) {
 
 
 
+
+
+
+
+// Routes concernant les couleurs
+// Route pour récupérer une association entre une montgolfière et une couleur
+app.get('/est/:id_montgolfiere/:id_couleur', async function (req, res) {
+    const { id_montgolfiere, id_couleur } = req.params;
+    const association = await getAssociation(id_montgolfiere, id_couleur);
+    res.send(association);
+});
+
+// Route pour créer une association entre une montgolfière et une couleur
+app.post('/est', async function (req, res) {
+    const { id_montgolfiere, id_couleur } = req.body;
+    const newAssociation = await createAssociation(id_montgolfiere, id_couleur);
+    res.status(201).send(newAssociation);
+});
+
+// Route pour supprimer une association entre une montgolfière et une couleur
+app.delete('/est/:id_montgolfiere/:id_couleur', async function (req, res) {
+    const { id_montgolfiere, id_couleur } = req.params;
+    await deleteAssociation(id_montgolfiere, id_couleur);
+    res.status(204).send();
+});
+
+// Route pour récupérer toutes les associations pour une montgolfière spécifique
+app.get('/est/montgolfiere/:id_montgolfiere', async function (req, res) {
+    const { id_montgolfiere } = req.params;
+    const associations = await getAllAssociationsForMontgolfiere(id_montgolfiere);
+    res.send(associations);
+});
+
+// Route pour récupérer toutes les associations pour une couleur spécifique
+app.get('/est/couleur/:id_couleur', async function (req, res) {
+    const { id_couleur } = req.params;
+    const associations = await getAllAssociationsForCouleur(id_couleur);
+    res.send(associations);
+});
 
 
 
