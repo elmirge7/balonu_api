@@ -3,6 +3,7 @@ const {getUtilisateurs, getUtilisateur, createUtilisateur, deleteUtilisateur, up
 const {getMontgolfieres, getMontgolfiere, createMontgolfiere, deleteMontgolfiere, updateMontgolfiere, getMontgolfieresByIdUtilisateur, deleteMontgolfieresByIdUtilisateur} = require('./services/montgolfieres/montgolfiereService')
 const {getStands, getStand, createStand, deleteStand,deleteStandsByIdUtilisateur, updateStand, getStandsByIdUtilisateur,getStandsByIdEmplacement} = require("./services/stands/standService");
 const {getProduits, getProduit, createProduit, deleteProduit, updateProduit} = require("./services/produits/produitService");
+const {getCouleurs, getCouleur, createCouleur, deleteCouleur, updateCouleur} = require('./services/couleurs/couleurService');
 
 
 const app = express()
@@ -221,6 +222,48 @@ app.put('/produits/:id', async function (req, res) {
     const { libelle_produit, id_emplacement, id_utilisateur } = req.body;
     const produit = await updateProduit(id, libelle_produit, id_emplacement, id_utilisateur);
     res.send(produit);
+});
+
+
+
+
+
+
+
+
+// Route pour récupérer toutes les couleurs
+app.get('/couleurs', async function (req, res) {
+    const couleurs = await getCouleurs();
+    res.send(couleurs);
+});
+
+// Route pour récupérer une couleur par son ID
+app.get('/couleurs/:id', async function (req, res) {
+    const id = req.params.id;
+    const couleur = await getCouleur(id);
+    res.send(couleur);
+});
+
+// Route pour créer une nouvelle couleur
+app.post('/couleurs', async function (req, res) {
+    const { libelle_couleur } = req.body;
+    const couleur = await createCouleur(libelle_couleur);
+    res.status(201).send(couleur);
+});
+
+
+// Route pour supprimer une couleur par son ID
+app.delete('/couleurs/:id', async function (req, res) {
+    const id = req.params.id;
+    await deleteCouleur(id);
+    res.status(204).send();
+});
+// Mise à jour d'une couleur par son ID
+app.put('/couleurs/:id', async function (req, res) {
+    const id = req.params.id;
+    const { libelle_couleur } = req.body;
+    const couleur = await updateCouleur(id, libelle_couleur);
+    res.send(couleur);
 });
 
 app.listen(3000,() => {
