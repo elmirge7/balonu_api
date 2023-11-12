@@ -5,6 +5,7 @@ const {getStands, getStand, createStand, deleteStand,deleteStandsByIdUtilisateur
 const {getProduits, getProduit, createProduit, deleteProduit, updateProduit} = require("./services/produits/produitService");
 const {getCouleurs, getCouleur, createCouleur, deleteCouleur, updateCouleur} = require('./services/couleurs/couleurService');
 const {getEmplacements,getEmplacement, createEmplacement, deleteEmplacement, updateEmplacement} = require('./services/emplacements/emplacementService');
+const {getHorairesVol, getHoraireVol, createHoraireVol, deleteHoraireVol, updateHoraireVol} = require('./services/horairesVol/horaireVolService');
 
 
 const app = express()
@@ -316,7 +317,41 @@ app.put('/couleurs/:id', async function (req, res) {
 
 
 
+// Routes concernant les couleurs
+// Route pour récupérer toutes les horraires_vols
+app.get('/horairesVol', async function (req, res) {
+    const horairesVol = await getHorairesVol();
+    res.send(horairesVol);
+});
 
+// Route pour récupérer un horaire de vol par son ID
+app.get('/horairesVol/:id', async function (req, res) {
+    const id = req.params.id;
+    const horaireVol = await getHoraireVol(id);
+    res.send(horaireVol);
+});
+
+// Route pour créer un nouvel horaire de vol
+app.post('/horairesVol', async function (req, res) {
+    const { date_vol, horaire_vol } = req.body;
+    const horaireVol = await createHoraireVol(date_vol, horaire_vol);
+    res.status(201).send(horaireVol);
+});
+
+// Route pour supprimer un horaire de vol par son ID
+app.delete('/horairesVol/:id', async function (req, res) {
+    const id = req.params.id;
+    await deleteHoraireVol(id);
+    res.status(204).send();
+});
+
+// Route pour mettre à jour un horaire de vol par son ID
+app.put('/horairesVol/:id', async function (req, res) {
+    const id = req.params.id;
+    const { date_vol, horaire_vol } = req.body;
+    const horaireVol = await updateHoraireVol(id, date_vol, horaire_vol);
+    res.send(horaireVol);
+});
 
 
 
