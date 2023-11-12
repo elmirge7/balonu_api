@@ -6,6 +6,7 @@ const {getProduits, getProduit, createProduit, deleteProduit, updateProduit} = r
 const {getCouleurs, getCouleur, createCouleur, deleteCouleur, updateCouleur} = require('./services/couleurs/couleurService');
 const {getEmplacements,getEmplacement, createEmplacement, deleteEmplacement, updateEmplacement} = require('./services/emplacements/emplacementService');
 const {getHorairesVol, getHoraireVol, createHoraireVol, deleteHoraireVol, updateHoraireVol} = require('./services/horairesVol/horaireVolService');
+const {getVentes, createVente, deleteVente, getAllVentesForStand, getAllVentesForProduit} = require('./services/vends/vendService');
 const {getAssociations, getAssociation, createAssociation, deleteAssociation, getAllAssociationsForMontgolfiere, getAllAssociationsForCouleur} = require('./services/est/estService');
 const {getVols,getVol, createVol, deleteVol, getAllVolsForUtilisateur, getAllVolsForMontgolfiere, getAllVolsForHoraireVol} = require('./services/vols/volService');
 
@@ -361,6 +362,47 @@ app.put('/horairesVol/:id', async function (req, res) {
 
 
 
+// Routes concernant les ventes
+// Route pour récupérer toutes les ventes
+app.get('/ventes', async function (req, res) {
+    const ventes = await getVentes();
+    res.send(ventes);
+});
+// Route pour créer une vente
+app.post('/ventes', async function (req, res) {
+    const { id_stand, id_produit, prix_produit } = req.body;
+    await createVente(id_stand, id_produit, prix_produit);
+    res.status(201).send('Vente créée avec succès.');
+});
+
+// Route pour supprimer une vente
+app.delete('/ventes/:id_stand/:id_produit', async function (req, res) {
+    const { id_stand, id_produit } = req.params;
+    await deleteVente(id_stand, id_produit);
+    res.status(204).send();
+});
+
+// Route pour récupérer toutes les ventes pour un stand spécifique
+app.get('/ventes/stand/:id_stand', async function (req, res) {
+    const { id_stand } = req.params;
+    const ventes = await getAllVentesForStand(id_stand);
+    res.send(ventes);
+});
+
+// Route pour récupérer toutes les ventes pour un produit spécifique
+app.get('/ventes/produit/:id_produit', async function (req, res) {
+    const { id_produit } = req.params;
+    const ventes = await getAllVentesForProduit(id_produit);
+    res.send(ventes);
+});
+
+
+
+
+
+
+
+
 // Routes concernant les couleurs
 // Route pour récupérer toutes les associations
 app.get('/est', async function (req, res) {
@@ -390,7 +432,7 @@ app.delete('/est/:id_montgolfiere/:id_couleur', async function (req, res) {
 });
 
 
-// ca marche pas encore
+// Pas sur que ca marche
 // Route pour récupérer toutes les associations pour une montgolfière spécifique
 app.get('/est/montgolfiere/:id_montgolfiere', async function (req, res) {
     const { id_montgolfiere } = req.params;

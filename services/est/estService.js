@@ -19,17 +19,17 @@ function createAssociation(id_montgolfiere, id_couleur) {
 
 // Supprimer une association entre montgolfiere et couleur
 function deleteAssociation(id_montgolfiere, id_couleur) {
-    return pool.query("DELETE FROM est WHERE id_montgolfiere = ? AND id_couleur = ?", [id_montgolfiere, id_couleur]);
+    return pool.query("DELETE FROM est WHERE id_montgolfiere = ? AND id_couleur = ?", [id_montgolfiere, id_couleur]).then(([rows]) => rows);
 }
 
 // Récupérer toutes les associations d'une montgolfiere
 function getAllAssociationsForMontgolfiere(id_montgolfiere) {
-    return pool.query("SELECT * FROM est WHERE id_montgolfiere = ?", [id_montgolfiere]);
+    return pool.query("SELECT * FROM est WHERE id_montgolfiere = ?", [id_montgolfiere]).then(([rows]) => rows);
 }
 
 // Récupérer toutes les associations d'une couleurs
 function getAllAssociationsForCouleur(id_couleur) {
-    return pool.query("SELECT * FROM est WHERE id_couleur = ?", [id_couleur]);
+    return pool.query("SELECT * FROM est WHERE id_couleur = ?", [id_couleur]).then(([rows]) => rows);
 }
 
 module.exports = {
