@@ -4,12 +4,16 @@ const {getMontgolfieres, getMontgolfiere, createMontgolfiere, deleteMontgolfiere
 const {getStands, getStand, createStand, deleteStand,deleteStandsByIdUtilisateur, updateStand, getStandsByIdUtilisateur,getStandsByIdEmplacement} = require("./services/stands/standService");
 const {getProduits, getProduit, createProduit, deleteProduit, updateProduit} = require("./services/produits/produitService");
 const {getCouleurs, getCouleur, createCouleur, deleteCouleur, updateCouleur} = require('./services/couleurs/couleurService');
+const {getEmplacements,getEmplacement, createEmplacement, deleteEmplacement, updateEmplacement} = require('./services/emplacements/emplacementService');
 
 
 const app = express()
 
 app.use(express.json());
 
+
+
+// Routes concernant les utilisateurs
 app.get('/utilisateurs', async function (req, res) {
     const utilisateurs = await getUtilisateurs();
     res.send(utilisateurs);
@@ -52,7 +56,6 @@ app.put('/utilisateurs/:id', async (req, res) => {
 
 
 // Routes qui concernent les montgolfières
-
 // Accès à toutes les montgolfières
 app.get('/montgolfieres', async function (req, res) {
     const montgolfieres = await getMontgolfieres();
@@ -106,10 +109,50 @@ app.delete('/utilisateurs/:id/montgolfieres', async function (req, res){
 app.put('/montgolfieres/:id', async function (req, res){
     const id = req.params.id;
     const { nombre_place, libelle_montgolfiere, photo, id_utilisateur } = req.body;
-    const montgolfiere = await updateMontgolfiere(nombre_place, libelle_montgolfiere, photo, id_utilisateur);
+    const montgolfiere = await updateMontgolfiere(id,nombre_place, libelle_montgolfiere, photo, id_utilisateur);
     res.send(montgolfiere);
 })
 
+
+
+
+
+
+// Routes concernant les emplacements
+// Route pour recuperer tous les emplacements
+app.get('/emplacements', async function (req, res) {
+    const emplacements = await getEmplacements();
+    res.send(emplacements);
+});
+
+// Route pour récupérer un emplacement par son ID
+app.get('/emplacements/:id', async function (req, res) {
+    const id = req.params.id;
+    const emplacement = await getEmplacement(id);
+    res.send(emplacement);
+});
+
+// Route pour créer un nouvel emplacement
+app.post('/emplacements', async function (req, res) {
+    const { libelle_emplacement } = req.body;
+    const emplacement = await createEmplacement(libelle_emplacement);
+    res.status(201).send(emplacement);
+});
+
+// Route pour supprimer un emplacement par son ID
+app.delete('/emplacements/:id', async function (req, res) {
+    const id = req.params.id;
+    await deleteEmplacement(id);
+    res.status(204).send();
+});
+
+// Route pour mettre à jour un emplacement par son ID
+app.put('/emplacements/:id', async function (req, res) {
+    const id = req.params.id;
+    const { libelle_emplacement } = req.body;
+    const emplacement = await updateEmplacement(id, libelle_emplacement);
+    res.send(emplacement);
+});
 
 
 
@@ -230,7 +273,7 @@ app.put('/produits/:id', async function (req, res) {
 
 
 
-
+// Routes concernant les couleurs
 // Route pour récupérer toutes les couleurs
 app.get('/couleurs', async function (req, res) {
     const couleurs = await getCouleurs();
@@ -265,6 +308,20 @@ app.put('/couleurs/:id', async function (req, res) {
     const couleur = await updateCouleur(id, libelle_couleur);
     res.send(couleur);
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 app.listen(3000,() => {
     console.log('le serveur écoute sur le port 3000')
