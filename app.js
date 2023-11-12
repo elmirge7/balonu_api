@@ -6,7 +6,9 @@ const {getProduits, getProduit, createProduit, deleteProduit, updateProduit} = r
 const {getCouleurs, getCouleur, createCouleur, deleteCouleur, updateCouleur} = require('./services/couleurs/couleurService');
 const {getEmplacements,getEmplacement, createEmplacement, deleteEmplacement, updateEmplacement} = require('./services/emplacements/emplacementService');
 const {getHorairesVol, getHoraireVol, createHoraireVol, deleteHoraireVol, updateHoraireVol} = require('./services/horairesVol/horaireVolService');
-const {getAssociation, createAssociation, deleteAssociation, getAllAssociationsForMontgolfiere, getAllAssociationsForCouleur} = require('./services/est/estService');
+const {getAssociations, getAssociation, createAssociation, deleteAssociation, getAllAssociationsForMontgolfiere, getAllAssociationsForCouleur} = require('./services/est/estService');
+const {getVols,getVol, createVol, deleteVol, getAllVolsForUtilisateur, getAllVolsForMontgolfiere, getAllVolsForHoraireVol} = require('./services/vols/volService');
+
 
 const app = express()
 
@@ -360,7 +362,13 @@ app.put('/horairesVol/:id', async function (req, res) {
 
 
 // Routes concernant les couleurs
-// Route pour récupérer une association entre une montgolfière et une couleur
+// Route pour récupérer toutes les associations
+app.get('/est', async function (req, res) {
+    const associations = await getAssociations();
+    res.send(associations);
+});
+
+// Route pour récupérer une association en fonction d'une montgolfiere et une couleur
 app.get('/est/:id_montgolfiere/:id_couleur', async function (req, res) {
     const { id_montgolfiere, id_couleur } = req.params;
     const association = await getAssociation(id_montgolfiere, id_couleur);
@@ -381,6 +389,8 @@ app.delete('/est/:id_montgolfiere/:id_couleur', async function (req, res) {
     res.status(204).send();
 });
 
+
+// ca marche pas encore
 // Route pour récupérer toutes les associations pour une montgolfière spécifique
 app.get('/est/montgolfiere/:id_montgolfiere', async function (req, res) {
     const { id_montgolfiere } = req.params;
@@ -394,6 +404,78 @@ app.get('/est/couleur/:id_couleur', async function (req, res) {
     const associations = await getAllAssociationsForCouleur(id_couleur);
     res.send(associations);
 });
+
+
+
+
+
+
+
+
+
+
+
+// Routes concernant les vols
+// Accès à touts les vols
+app.get('/vols', async function (req, res) {
+    const vols = await getVols();
+    res.send(vols);
+})
+
+// Route pour récupérer un vol par un utilisateur, une montgolfière et un horaire de vol spécifiques
+
+app.get('/vols/:id_utilisateur/:id_montgolfiere/:id_horaire_vol', async function (req, res) {
+    const { id_utilisateur, id_montgolfiere, id_horaire_vol } = req.params;
+    const vol = await getVol(id_utilisateur, id_montgolfiere, id_horaire_vol);
+    res.send(vol);
+});
+
+// Route pour créer un vol
+app.post('/vols', async function (req, res) {
+    const { id_utilisateur, id_montgolfiere, id_horaire_vol, prix_vol, libelle_vol } = req.body;
+    const newVol = await createVol(id_utilisateur, id_montgolfiere, id_horaire_vol, prix_vol, libelle_vol);
+    res.status(201).send(newVol);
+});
+
+// Route pour supprimer un vol
+app.delete('/vols/:id_utilisateur/:id_montgolfiere/:id_horaire_vol', async function (req, res) {
+    const { id_utilisateur, id_montgolfiere, id_horaire_vol } = req.params;
+    await deleteVol(id_utilisateur, id_montgolfiere, id_horaire_vol);
+    res.status(204).send();
+});
+
+// Route pour récupérer tous les vols d'un utilisateur spécifique
+app.get('/vols/utilisateur/:id_utilisateur', async function (req, res) {
+    const { id_utilisateur } = req.params;
+    const vols = await getAllVolsForUtilisateur(id_utilisateur);
+    res.send(vols);
+});
+
+// Route pour récupérer tous les vols d'une montgolfière spécifique
+app.get('/vols/montgolfiere/:id_montgolfiere', async function (req, res) {
+    const { id_montgolfiere } = req.params;
+    const vols = await getAllVolsForMontgolfiere(id_montgolfiere);
+    res.send(vols);
+});
+
+// Route pour récupérer tous les vols pour un horaire de vol spécifique
+app.get('/vols/horaire/:id_horaire_vol', async function (req, res) {
+    const { id_horaire_vol } = req.params;
+    const vols = await getAllVolsForHoraireVol(id_horaire_vol);
+    res.send(vols);
+});
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
