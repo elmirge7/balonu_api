@@ -1,7 +1,8 @@
 const express = require('express');
 const {getUtilisateurs, getUtilisateur, createUtilisateur, deleteUtilisateur, updateUtilisateur} = require('./services/utilisateurs/utilisateurService')
 const {getMontgolfieres, getMontgolfiere, createMontgolfiere, deleteMontgolfiere, updateMontgolfiere, getMontgolfieresByIdUtilisateur, deleteMontgolfieresByIdUtilisateur} = require('./services/montgolfieres/montgolfiereService')
-const {getStands, getStand, createStand, deleteStand, updateStand, getStandsByIdUtilisateur,getStandsByIdEmplacement} = require("./services/stands/standService");
+const {getStands, getStand, createStand, deleteStand,deleteStandsByIdUtilisateur, updateStand, getStandsByIdUtilisateur,getStandsByIdEmplacement} = require("./services/stands/standService");
+const {getProduits, getProduit, createProduit, deleteProduit, updateProduit} = require("./services/produits/produitService");
 
 
 const app = express()
@@ -31,7 +32,7 @@ app.delete('/utilisateurs/:id', async function (req,res){
     const id = req.params.id;
     await deleteMontgolfieresByIdUtilisateur(id);
     await deleteUtilisateur(id);
-    res.status(204); // Renvoie un statut 204 (No Content) pour indiquer que la suprression s'est bien passée
+    res.status(204).send; // Renvoie un statut 204 (No Content) pour indiquer que la suprression s'est bien passee
 })
 
 // Route pour mettre à jour un utilisateur par rapport à son ID
@@ -90,9 +91,15 @@ app.delete('/montgolfieres/:id', async function (req, res){
 // Suppression de toutes les montgolfieres d'un ID d'utilisateur
 app.delete('/utilisateurs/:id/montgolfieres', async function (req, res){
     const id = req.params.id;
-    await deleteMontgolfieresByIdUtilisateur(id);
-    res.status(204);
-})
+    // Vérifie si des montgolfieres sont associees à l'utilisateur avant de les supprimer
+    const montgolfieres = await getMontgolfieresByIdUtilisateur(id);
+    if (montgolfieres.length > 0) {
+        await deleteMontgolfieresByIdUtilisateur(id);
+        res.status(204).send();
+    } else {
+        res.status(404).send("Aucune montgolfière associée à cet utilisateur.");
+    }
+});
 
 // Modification d'une montgolfière
 app.put('/montgolfieres/:id', async function (req, res){
@@ -134,8 +141,22 @@ app.post('/stands', async function (req, res) {
 app.delete('/stands/:id', async function (req, res) {
     const id = req.params.id;
     await deleteStand(id);
-    res.status(204).send(); // Renvoie un statut 204 (No Content) pour indiquer que la suppression s'est bien passée
+    res.status(204).send();
 });
+
+// Suppression de tous les stands d'un ID d'utilisateur
+app.delete('/utilisateurs/:id/stands', async function (req, res){
+    const id = req.params.id;
+    // Vérifie si des stands sont associés à l'utilisateur avant de les supprimer
+    const stands = await getStandsByIdUtilisateur(id);
+    if (stands.length > 0) {
+        await deleteStandsByIdUtilisateur(id);
+        res.status(204).send();
+    } else {
+        res.status(404).send("Aucun stand associé à cet utilisateur.");
+    }
+});
+
 
 // Mise à jour d'un stand par son ID
 app.put('/stands/:id', async function (req, res) {
@@ -166,6 +187,41 @@ app.get('/emplacements/:id/stands', async function (req, res) {
 
 
 
+// Routes concernant les produits
+// Accès à tous les produits
+app.get('/produits', async function (req, res) {
+    const produits = await getProduits();
+    res.send(produits);
+});
+
+// Accès à un produit en fonction de son ID
+app.get('/produits/:id', async function (req, res) {
+    const id = req.params.id;
+    const produit = await getProduit(id);
+    res.send(produit);
+});
+
+// Création d'un nouveau produit
+app.post('/produits', async function (req, res) {
+    const { libelle_produit, id_emplacement, id_utilisateur } = req.body;
+    const produit = await createProduit(libelle_produit, id_emplacement, id_utilisateur);
+    res.status(201).send(produit);
+});
+
+// Suppression d'un produit par son ID
+app.delete('/produits/:id', async function (req, res) {
+    const id = req.params.id;
+    await deleteProduit(id);
+    res.status(204).send();
+});
+
+// Mise à jour d'un stand par son ID
+app.put('/produits/:id', async function (req, res) {
+    const id = req.params.id;
+    const { libelle_produit, id_emplacement, id_utilisateur } = req.body;
+    const produit = await updateProduit(id, libelle_produit, id_emplacement, id_utilisateur);
+    res.send(produit);
+});
 
 app.listen(3000,() => {
     console.log('le serveur écoute sur le port 3000')

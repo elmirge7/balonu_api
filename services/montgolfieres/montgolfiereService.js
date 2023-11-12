@@ -27,7 +27,7 @@ function deleteMontgolfieresByIdUtilisateur(id_utilisateur) {
 }
 
 // Mettre à jour une montgolfière
-function updateMontgolfiere(nombre_place, libelle_montgolfiere, photo, id_utilisateur){
+function updateMontgolfiere(id_montgolfiere,nombre_place, libelle_montgolfiere, photo, id_utilisateur){
     return pool.query("UPDATE montgolfiere SET nombre_place = ?, libelle_montgolfiere = ?, photo = ?, id_utilisateur = ?", [nombre_place, libelle_montgolfiere, photo, id_utilisateur])
         .then(([result]) => getMontgolfiere(id_montgolfiere));
 }
